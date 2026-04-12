@@ -1,0 +1,29 @@
+Undangan Digital — catatan backend (proyek ini sudah aplikasi Laravel lengkap; lihat README.md untuk menjalankan).
+
+1) Salin folder app/, database/, routes/web.php, resources/views (merge), app/Providers/AppServiceProvider.php ke proyek Laravel Anda.
+
+2) Daftarkan AppServiceProvider jika belum ada (pagination Bootstrap 5):
+   - Laravel 11: tambahkan App\Providers\AppServiceProvider::class di bootstrap/providers.php
+   - Laravel 10: config/app.php → providers
+
+3) Alias middleware admin di bootstrap/app.php (L11):
+   ->withMiddleware(fn ($m) => $m->alias([
+       'admin' => \App\Http\Middleware\EnsureUserIsAdmin::class,
+   ]))
+   Laravel 10: app/Http/Kernel.php routeMiddleware / middlewareAliases
+
+4) Pastikan model User di config/auth.php mengarah ke App\Models\User.
+
+5) Jika tabel users sudah ada dari instalasi Laravel, HAPUS atau jangan jalankan migrasi 2025_04_11_100000_create_users_table.php (sesuaikan manual kolom is_admin boolean default false).
+
+6) php artisan migrate
+7) php artisan db:seed --class=Database\\Seeders\\InvitationDemoSeeder
+   atau php artisan db:seed
+
+8) php artisan storage:link   (untuk bukti pembayaran di storage/app/public)
+
+Akun contoh (seeder):
+- Admin: admin@einvite.test / password
+- User:  demo@einvite.test / password
+
+9) APP_ENV=local: tombol "Demo lokal" di halaman pembayaran menandai pesanan selesai tanpa admin.
