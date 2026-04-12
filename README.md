@@ -109,20 +109,6 @@ Atau:
 ```bash
 vendor/bin/phpunit
 ```
-
-## Upload ke GitHub
-
-Jika project belum terhubung ke GitHub:
-
-```bash
-git init
-git add .
-git commit -m "Initial commit"
-git branch -M main
-git remote add origin https://github.com/USERNAME/undangan-digital.git
-git push -u origin main
-```
-
 ## Catatan
 
 - Pastikan file `.env` tidak ikut ter-push.
