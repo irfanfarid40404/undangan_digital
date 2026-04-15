@@ -1,6 +1,33 @@
 @extends('layouts.landing')
 
 @section('title', 'Undangan Digital Modern')
+@section('body_class', 'home-preload')
+
+@push('styles')
+    <style>
+        body.home-preload #pageLoader {
+            opacity: 1;
+            pointer-events: all;
+        }
+
+        body.home-preload main,
+        body.home-preload footer {
+            visibility: hidden;
+        }
+
+        .home-hero {
+            padding-top: 5.25rem;
+            min-height: calc(100vh - 1rem) !important;
+        }
+
+        @media (min-width: 992px) {
+            .home-hero {
+                padding-top: 0;
+                min-height: 100vh !important;
+            }
+        }
+    </style>
+@endpush
 
 @php
     $demoMedia = config('invitation_demo_media');
@@ -8,7 +35,7 @@
 @endphp
 
 @section('content')
-    <section class="position-relative overflow-hidden" style="min-height: 100vh; display: flex; align-items: center;">
+    <section class="home-hero position-relative overflow-hidden" style="display: flex; align-items: center;">
         <div class="hero-blob bg-primary" style="width: 320px; height: 320px; top: -40px; right: -40px;"></div>
         <div class="hero-blob" style="width: 280px; height: 280px; bottom: -60px; left: -40px; background: #e255b1;"></div>
         <div class="container position-relative" style="z-index:1;">
@@ -246,6 +273,34 @@
 
 @push('scripts')
     <script>
+        (function () {
+            const loader = document.getElementById('pageLoader');
+            if (!loader) return;
+
+            loader.classList.add('is-active');
+
+            let hidden = false;
+            const hideLoader = function () {
+                if (hidden) return;
+                hidden = true;
+                loader.classList.remove('is-active');
+                document.body.classList.remove('home-preload');
+            };
+
+            if (document.readyState === 'complete') {
+                window.requestAnimationFrame(function () {
+                    setTimeout(hideLoader, 180);
+                });
+            } else {
+                window.addEventListener('load', function () {
+                    setTimeout(hideLoader, 180);
+                }, { once: true });
+
+                // Fallback bila event load terlambat karena jaringan asset eksternal.
+                setTimeout(hideLoader, 1400);
+            }
+        })();
+
         (function () {
             document.querySelectorAll('.catalog-image').forEach(function (img) {
                 img.addEventListener('error', function () {
