@@ -70,11 +70,9 @@ class PaymentController extends Controller
             ->values();
 
         if ($paymentMethods->isEmpty()) {
-            $paymentMethods = collect([
-                ['code' => 'pay_bank', 'label' => 'Transfer Bank', 'icon' => 'bi-bank', 'provider_name' => 'Belum diatur admin', 'account_name' => '-', 'account_number' => '-', 'notes' => null, 'qris_image_url' => null],
-                ['code' => 'pay_ew', 'label' => 'E-Wallet', 'icon' => 'bi-wallet2', 'provider_name' => 'Belum diatur admin', 'account_name' => '-', 'account_number' => '-', 'notes' => null, 'qris_image_url' => null],
-                ['code' => 'pay_qr', 'label' => 'QRIS', 'icon' => 'bi-qr-code-scan', 'provider_name' => 'Belum diatur admin', 'account_name' => '-', 'account_number' => '-', 'notes' => null, 'qris_image_url' => null],
-            ]);
+            return redirect()
+                ->route('user.orders.show', $order)
+                ->with('error', 'Metode pembayaran belum dikonfigurasi oleh admin. Silakan hubungi administrator.');
         }
 
         return view('payment.index', [
@@ -120,17 +118,27 @@ class PaymentController extends Controller
             ->all();
 
         if (empty($allowedMethods)) {
-            $allowedMethods = [
-                PaymentMethodSetting::METHOD_BANK,
-                PaymentMethodSetting::METHOD_EWALLET,
-                PaymentMethodSetting::METHOD_QRIS,
-            ];
+            return redirect()
+                ->route('user.orders.show', $order)
+                ->with('error', 'Metode pembayaran belum dikonfigurasi oleh admin. Silakan hubungi administrator.');
         }
 
         $validated = $request->validate([
             'method' => ['required', 'string', Rule::in($allowedMethods)],
             'proof' => ['required', 'file', 'image', 'max:8192'],
         ]);
+
+        // Double-check: Verifikasi ulang bahwa metode pembayaran masih aktif di database
+        $verifyMethod = PaymentMethodSetting::query()
+            ->where('is_active', true)
+            ->where('method_code', $validated['method'])
+            ->first();
+
+        if (! $verifyMethod) {
+            return redirect()
+                ->route('user.orders.show', $order)
+                ->with('error', 'Metode pembayaran tidak tersedia. Silakan coba lagi atau hubungi administrator.');
+        }
 
         $proofPath = null;
         if ($request->hasFile('proof')) {

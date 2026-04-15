@@ -300,9 +300,45 @@
     showStep(0);
   }
 
+  function silenceDataTablesWarnings() {
+    if (window.jQuery && window.jQuery.fn && window.jQuery.fn.dataTable) {
+      window.jQuery.fn.dataTable.ext.errMode = "none";
+    }
+    if (typeof window.DataTable !== "undefined" && window.DataTable.ext) {
+      window.DataTable.ext.errMode = "none";
+    }
+  }
+
+  function hasMalformedTableRows(table) {
+    var expectedColumns = table.querySelectorAll("thead th").length;
+    if (!expectedColumns) return true;
+
+    var rows = table.querySelectorAll("tbody tr");
+    if (!rows.length) return false;
+
+    for (var i = 0; i < rows.length; i++) {
+      var row = rows[i];
+      if (row.querySelector("td[colspan], th[colspan], td[rowspan], th[rowspan]")) {
+        return true;
+      }
+
+      var cells = row.querySelectorAll(":scope > td, :scope > th");
+      if (cells.length !== expectedColumns) {
+        return true;
+      }
+    }
+
+    return false;
+  }
+
   function initDataTables() {
     doc.querySelectorAll("table.js-datatable").forEach(function (table) {
       if (table.dataset.dtInited === "1") return;
+
+      if (hasMalformedTableRows(table)) {
+        return;
+      }
+
       var pageLength = Number(table.dataset.pageLength || 10);
       
       // Detect date columns by looking for data-order-by attributes
@@ -379,6 +415,7 @@
     wirePaymentDemo();
     wireCatalogModal();
     wireOrderSteps();
+    silenceDataTablesWarnings();
     initDataTables();
     wireConfirmForms();
 

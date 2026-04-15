@@ -13,9 +13,22 @@
 @endphp
 
 @section('content')
-    @php($selectedMethod = old('method', $latestPayment?->method ?: ($paymentMethods[0]['code'] ?? 'pay_bank')))
+    @if($paymentMethods->isEmpty())
+        <div class="card border-0 glass">
+            <div class="card-body p-4">
+                <div class="alert alert-warning border-0 d-flex align-items-start gap-2 mb-0" role="alert">
+                    <i class="bi bi-exclamation-triangle-fill mt-1"></i>
+                    <div class="small">
+                        <div class="fw-semibold mb-1">Metode pembayaran tidak tersedia</div>
+                        <div>Admin belum mengkonfigurasi metode pembayaran. Silakan hubungi administrator untuk mengaktifkan metode pembayaran.</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    @else
+        @php($selectedMethod = old('method', $latestPayment?->method ?: ($paymentMethods[0]['code'] ?? 'pay_bank')))
 
-    @if (!empty($mustReuploadProof) && !empty($latestPayment))
+        @if (!empty($mustReuploadProof) && !empty($latestPayment))
         <div class="alert alert-danger border-0 d-flex align-items-start gap-2" role="alert">
             <i class="bi bi-x-octagon-fill mt-1"></i>
             <div class="small">
@@ -64,66 +77,73 @@
         @csrf
         <div class="card-body p-4">
             <div class="fw-semibold mb-3">Kirim konfirmasi pembayaran</div>
-            <div class="row g-3 mb-3">
-                @foreach ($paymentMethods as $method)
-                    <div class="col-md-4">
-                        <input
-                            type="radio"
-                            class="btn-check"
-                            name="method"
-                            id="{{ $method['code'] }}"
-                            value="{{ $method['code'] }}"
-                            autocomplete="off"
-                            data-method-name="{{ $method['label'] }}"
-                            data-provider="{{ $method['provider_name'] ?? '-' }}"
-                            data-account-name="{{ $method['account_name'] ?? '-' }}"
-                            data-account-number="{{ $method['account_number'] ?? '-' }}"
-                            data-notes="{{ $method['notes'] ?? '-' }}"
-                            data-qris-image="{{ $method['qris_image_url'] ?? '' }}"
-                            @checked($selectedMethod === $method['code'])
-                            required
-                        >
-                        <label class="w-100" for="{{ $method['code'] }}">
-                            <div class="card border-0 glass h-100 hover-lift p-4 text-center" style="cursor:pointer;">
-                                <div class="d-inline-flex mx-auto align-items-center justify-content-center rounded-3 btn-gradient text-white mb-3" style="width:48px;height:48px;">
-                                    <i class="bi {{ $method['icon'] }} fs-4"></i>
+            @if($paymentMethods->isNotEmpty())
+                <div class="row g-3 mb-3">
+                    @foreach ($paymentMethods as $method)
+                        <div class="col-md-4">
+                            <input
+                                type="radio"
+                                class="btn-check"
+                                name="method"
+                                id="{{ $method['code'] }}"
+                                value="{{ $method['code'] }}"
+                                autocomplete="off"
+                                data-method-name="{{ $method['label'] }}"
+                                data-provider="{{ $method['provider_name'] ?? '-' }}"
+                                data-account-name="{{ $method['account_name'] ?? '-' }}"
+                                data-account-number="{{ $method['account_number'] ?? '-' }}"
+                                data-notes="{{ $method['notes'] ?? '-' }}"
+                                data-qris-image="{{ $method['qris_image_url'] ?? '' }}"
+                                @checked($selectedMethod === $method['code'])
+                                required
+                            >
+                            <label class="w-100" for="{{ $method['code'] }}">
+                                <div class="card border-0 glass h-100 hover-lift p-4 text-center" style="cursor:pointer;">
+                                    <div class="d-inline-flex mx-auto align-items-center justify-content-center rounded-3 btn-gradient text-white mb-3" style="width:48px;height:48px;">
+                                        <i class="bi {{ $method['icon'] }} fs-4"></i>
+                                    </div>
+                                    <div class="fw-semibold">{{ $method['label'] }}</div>
+                                    <div class="small text-muted">{{ $method['provider_name'] ?: 'Dikonfigurasi admin' }}</div>
                                 </div>
-                                <div class="fw-semibold">{{ $method['label'] }}</div>
-                                <div class="small text-muted">{{ $method['provider_name'] ?: 'Dikonfigurasi admin' }}</div>
-                            </div>
-                        </label>
+                            </label>
+                        </div>
+                    @endforeach
+                </div>
+
+                <div class="border rounded-4 p-3 mb-3 bg-body bg-opacity-50" id="methodDetailPanel">
+                    <div class="fw-semibold mb-2">Detail metode pembayaran</div>
+                    <div class="small text-muted mb-2">Metode: <span id="methodDetailName">-</span></div>
+                    <div class="row g-2 small mb-2">
+                        <div class="col-md-6"><span class="text-muted">Provider:</span> <span id="methodDetailProvider">-</span></div>
+                        <div class="col-md-6"><span class="text-muted">Nama akun:</span> <span id="methodDetailAccountName">-</span></div>
+                        <div class="col-md-6"><span class="text-muted">Nomor akun:</span> <span id="methodDetailAccountNumber">-</span></div>
                     </div>
-                @endforeach
-            </div>
-
-            <div class="border rounded-4 p-3 mb-3 bg-body bg-opacity-50" id="methodDetailPanel">
-                <div class="fw-semibold mb-2">Detail metode pembayaran</div>
-                <div class="small text-muted mb-2">Metode: <span id="methodDetailName">-</span></div>
-                <div class="row g-2 small mb-2">
-                    <div class="col-md-6"><span class="text-muted">Provider:</span> <span id="methodDetailProvider">-</span></div>
-                    <div class="col-md-6"><span class="text-muted">Nama akun:</span> <span id="methodDetailAccountName">-</span></div>
-                    <div class="col-md-6"><span class="text-muted">Nomor akun:</span> <span id="methodDetailAccountNumber">-</span></div>
+                    <div class="small mb-2"><span class="text-muted">Catatan:</span> <span id="methodDetailNotes">-</span></div>
+                    <div id="methodDetailQrisWrapper" class="d-none">
+                        <div class="small text-muted mb-2">Scan QRIS berikut:</div>
+                        <a id="methodDetailQrisLink" href="#" target="_blank" class="d-inline-block">
+                            <img id="methodDetailQrisImage" src="" alt="QRIS" class="rounded-3 border" style="max-width: 220px; width: 100%; height: auto;">
+                        </a>
+                    </div>
                 </div>
-                <div class="small mb-2"><span class="text-muted">Catatan:</span> <span id="methodDetailNotes">-</span></div>
-                <div id="methodDetailQrisWrapper" class="d-none">
-                    <div class="small text-muted mb-2">Scan QRIS berikut:</div>
-                    <a id="methodDetailQrisLink" href="#" target="_blank" class="d-inline-block">
-                        <img id="methodDetailQrisImage" src="" alt="QRIS" class="rounded-3 border" style="max-width: 220px; width: 100%; height: auto;">
-                    </a>
-                </div>
-            </div>
 
-            <div class="mb-3">
-                <label class="form-label small text-muted">Bukti transfer (wajib)</label>
-                <input type="file" class="form-control" name="proof" accept="image/*" required>
-                @error('method')
-                    <div class="small text-danger mt-1">{{ $message }}</div>
-                @enderror
-                @if (!empty($mustReuploadProof))
-                    <div class="form-text text-danger">Bukti transfer wajib diunggah ulang karena pengiriman sebelumnya ditolak.</div>
-                @endif
-            </div>
-            <button type="submit" class="btn btn-gradient rounded-pill px-4">Kirim ke admin</button>
+                <div class="mb-3">
+                    <label class="form-label small text-muted">Bukti transfer (wajib)</label>
+                    <input type="file" class="form-control" name="proof" accept="image/*" required>
+                    @error('method')
+                        <div class="small text-danger mt-1">{{ $message }}</div>
+                    @enderror
+                    @if (!empty($mustReuploadProof))
+                        <div class="form-text text-danger">Bukti transfer wajib diunggah ulang karena pengiriman sebelumnya ditolak.</div>
+                    @endif
+                </div>
+                <button type="submit" class="btn btn-gradient rounded-pill px-4">Kirim ke admin</button>
+            @else
+                <div class="alert alert-info border-0" role="alert">
+                    <i class="bi bi-info-circle me-2"></i>
+                    Metode pembayaran tidak tersedia. Silakan hubungi administrator.
+                </div>
+            @endif
         </div>
     </form>
 
@@ -182,4 +202,5 @@
     @endif
 
     <a class="btn btn-outline-secondary rounded-pill ms-2" href="{{ route('user.payment', ['fail' => 1]) }}">URL demo gagal (?fail=1)</a>
+    @endif
 @endsection
