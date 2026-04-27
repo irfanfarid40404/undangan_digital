@@ -1,21 +1,32 @@
-@extends('layouts.user')
+@extends('layouts.landing')
 
 @section('title', 'Checkout')
-@section('page_heading', 'Ringkasan checkout')
+
+@push('styles')
+    <style>
+        .checkout-page { padding-top: 6rem; min-height: calc(100vh - 4rem); }
+    </style>
+@endpush
 
 @php
-    $sidebarActive = 'orders';
-    $breadcrumb = [
-        ['label' => 'Home', 'url' => route('home')],
-        ['label' => 'Data', 'url' => route('user.order.form', ['product' => $order->product_id])],
-        ['label' => 'Checkout'],
-    ];
     $subtotal = $order->total_amount + $order->discount_amount;
     $discount = $order->discount_amount;
     $total = $order->total_amount;
 @endphp
 
 @section('content')
+    <div class="checkout-page py-4">
+    <div class="container">
+        <div class="mb-4">
+            <h1 class="h4 fw-bold mb-0">Ringkasan checkout</h1>
+            <nav aria-label="breadcrumb" class="mt-1">
+                <ol class="breadcrumb mb-0 small">
+                    <li class="breadcrumb-item"><a href="{{ route('home') }}">Home</a></li>
+                    <li class="breadcrumb-item"><a href="{{ route('user.order.form', ['product' => $order->product_id]) }}">Data</a></li>
+                    <li class="breadcrumb-item active">Checkout</li>
+                </ol>
+            </nav>
+        </div>
     <div class="row g-4">
         <div class="col-lg-7">
             <div class="card border-0 glass mb-3">
@@ -62,4 +73,6 @@
             </div>
         </div>
     </div>
+    </div>{{-- container --}}
+    </div>{{-- checkout-page --}}
 @endsection

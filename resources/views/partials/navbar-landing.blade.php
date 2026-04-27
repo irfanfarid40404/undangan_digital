@@ -12,20 +12,23 @@
         <div class="collapse navbar-collapse" id="navMain">
             <ul class="navbar-nav ms-auto mb-2 mb-lg-0 align-items-lg-center gap-lg-1">
                 <li class="nav-item"><a class="nav-link" href="{{ route('home') }}">Home</a></li>
-                <li class="nav-item"><a class="nav-link" href="{{ route('home') }}#katalog">Katalog</a></li>
+                <li class="nav-item"><a class="nav-link" href="{{ auth()->check() ? route('user.catalog') : route('home').'#katalog' }}">Katalog</a></li>
                 <li class="nav-item"><a class="nav-link" href="{{ route('home') }}#harga">Harga</a></li>
                 <li class="nav-item"><a class="nav-link" href="{{ route('home') }}#testimoni">Testimoni</a></li>
                 @auth
-                    <li class="nav-item"><a class="nav-link" href="{{ route('user.catalog') }}">App</a></li>
+                    <li class="nav-item">
+                        <a class="nav-link position-relative" href="{{ route('user.orders.index') }}" title="Pesanan Saya">
+                            <i class="bi bi-bag fs-5"></i>
+                            @if (!empty($navCartCount) && $navCartCount > 0)
+                                <span class="position-absolute btn-gradient d-flex align-items-center justify-content-center rounded-circle" style="font-size:.6rem; font-weight:700; width:16px; height:16px; top:2px; left:calc(100% - 8px); line-height:1;">
+                                    {{ $navCartCount > 99 ? '9+' : $navCartCount }}
+                                </span>
+                            @endif
+                        </a>
+                    </li>
                     @if (auth()->user()->is_admin)
                         <li class="nav-item"><a class="nav-link" href="{{ route('admin.dashboard') }}">Admin</a></li>
                     @endif
-                    <li class="nav-item">
-                        <form method="post" action="{{ route('logout') }}" class="d-inline">
-                            @csrf
-                            <button type="submit" class="nav-link btn btn-link text-decoration-none p-0 m-0">Logout</button>
-                        </form>
-                    </li>
                 @else
                     <li class="nav-item"><a class="nav-link" href="{{ route('login') }}">Login</a></li>
                 @endauth
@@ -34,11 +37,18 @@
                         <i class="bi bi-moon-stars-fill"></i>
                     </button>
                 </li>
-                @guest
+                @auth
+                    <li class="nav-item ms-lg-2">
+                        <a class="btn btn-sm btn-gradient rounded-pill px-3 d-flex align-items-center gap-1" href="{{ route('user.profile') }}">
+                            <i class="bi bi-person-fill"></i>
+                            <span>Profil</span>
+                        </a>
+                    </li>
+                @else
                     <li class="nav-item ms-lg-2">
                         <a class="btn btn-sm btn-gradient rounded-pill px-3" href="{{ route('register') }}">Mulai Gratis</a>
                     </li>
-                @endguest
+                @endauth
             </ul>
         </div>
     </div>

@@ -91,7 +91,7 @@ class AdminDashboardController extends Controller
             'activeOrders' => $activeOrders,
             'pendingPayments' => $pendingPayments,
             'activity' => $activity,
-            'checkoutData' => $checkoutData,
+            'checkoutData' => $checkoutData, 
         ]);
     }
 }

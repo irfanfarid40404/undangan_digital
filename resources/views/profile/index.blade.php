@@ -1,19 +1,31 @@
-@extends('layouts.user')
+@extends('layouts.landing')
 
 @section('title', 'Profil Saya')
-@section('page_heading', 'Profil saya')
+
+@push('styles')
+    <style>
+        .profile-page { padding-top: 7.5rem; min-height: calc(100vh - 4rem); }
+    </style>
+@endpush
 
 @php
-    $sidebarActive = 'profile';
-    $breadcrumb = [
-        ['label' => 'Home', 'url' => route('home')],
-        ['label' => 'Dashboard', 'url' => route('user.dashboard')],
-        ['label' => 'Profil'],
-    ];
+    // breadcrumb tidak dibutuhkan pada layout landing
 @endphp
 
 @section('content')
-    <div class="row g-3">
+    <div class="profile-page py-6">
+        <div class="container">
+            <div class="mb-4">
+                <h1 class="h4 fw-bold mb-0">Profil Saya</h1>
+                <nav aria-label="breadcrumb" class="mt-1">
+                    <ol class="breadcrumb mb-0 small">
+                        <li class="breadcrumb-item"><a href="{{ route('home') }}">Home</a></li>
+                        <li class="breadcrumb-item active">Profil</li>
+                    </ol>
+                </nav>
+            </div>
+
+            <div class="row g-3">
         <div class="col-lg-8">
             <div class="card border-0 glass">
                 <div class="card-body p-4">
@@ -78,7 +90,7 @@
                         </div>
 
                         <div class="col-12 d-flex justify-content-end gap-2 pt-2">
-                            <a href="{{ route('user.dashboard') }}" class="btn btn-outline-secondary rounded-pill">Batal</a>
+                            <a href="{{ route('home') }}" class="btn btn-outline-secondary rounded-pill">Batal</a>
                             <button type="submit" class="btn btn-gradient rounded-pill">Simpan perubahan</button>
                         </div>
                     </form>
@@ -105,8 +117,45 @@
                         </div>
                     </div>
                     <div class="small text-muted">Perbarui data profil agar informasi akun Anda tetap akurat.</div>
+                    <div class="mt-3 d-grid gap-2">
+                        <a href="{{ route('user.orders.index') }}" class="btn btn-outline-primary rounded-pill">
+                            <i class="bi bi-cart3 me-1"></i> Pesanan Saya
+                        </a>
+                        <a href="{{ route('user.catalog') }}" class="btn btn-outline-secondary rounded-pill">
+                            <i class="bi bi-grid me-1"></i> Katalog
+                        </a>
+                        <form method="post" action="{{ route('logout') }}">
+                            @csrf
+                            <button type="submit" class="btn btn-outline-danger rounded-pill w-100">
+                                <i class="bi bi-box-arrow-right me-1"></i> Logout
+                            </button>
+                        </form>
+                    </div>
                 </div>
             </div>
         </div>
     </div>
+        </div>
+    </div>
 @endsection
+
+@push('scripts')
+    @if (session('success'))
+        <script>
+            document.addEventListener('DOMContentLoaded', function () {
+                if (window.InviteUI && typeof window.InviteUI.showToast === 'function') {
+                    window.InviteUI.showToast(@json(session('success')), 'success');
+                }
+            });
+        </script>
+    @endif
+    @if (session('error') || $errors->any())
+        <script>
+            document.addEventListener('DOMContentLoaded', function () {
+                if (window.InviteUI && typeof window.InviteUI.showToast === 'function') {
+                    window.InviteUI.showToast(@json($errors->any() ? $errors->first() : session('error')), 'error');
+                }
+            });
+        </script>
+    @endif
+@endpush

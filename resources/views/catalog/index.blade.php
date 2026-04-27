@@ -1,21 +1,31 @@
-@extends('layouts.user')
+@extends('layouts.landing')
 
-@section('title', 'Katalog')
-@section('page_heading', 'Katalog undangan')
+@section('title', 'Katalog Undangan')
+
+@push('styles')
+    <style>
+        .catalog-page { padding-top: 7rem; min-height: calc(100vh - 4rem); }
+    </style>
+@endpush
 
 @php
-    $sidebarActive = 'catalog';
-    $breadcrumb = [
-        ['label' => 'Home', 'url' => route('home')],
-        ['label' => 'Dashboard', 'url' => route('user.dashboard')],
-        ['label' => 'Katalog'],
-    ];
     $fallbackCovers = config('invitation_demo_media.covers', []);
     $categories = $products->pluck('category')->filter()->unique()->sort()->values();
     $themes = $products->pluck('theme')->filter()->unique()->sort()->values();
 @endphp
 
 @section('content')
+    <div class="catalog-page py-6">
+        <div class="container">
+            <div class="mb-4">
+                <h1 class="h4 fw-bold mb-0">Katalog Undangan</h1>
+                <nav aria-label="breadcrumb" class="mt-1">
+                    <ol class="breadcrumb mb-0 small">
+                        <li class="breadcrumb-item"><a href="{{ route('home') }}">Home</a></li>
+                        <li class="breadcrumb-item active">Katalog</li>
+                    </ol>
+                </nav>
+            </div>
     <div class="card border-0 glass mb-4">
         <div class="card-body">
             <div class="row g-3 align-items-end">
@@ -125,7 +135,9 @@
                 </div>
             </div>
         </div>
-    </div>
+    </div>{{-- modal --}}
+        </div>{{-- container --}}
+    </div>{{-- catalog-page --}}
 @endsection
 
 @push('scripts')

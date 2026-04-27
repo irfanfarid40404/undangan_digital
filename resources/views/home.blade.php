@@ -51,8 +51,13 @@
                         Pilih desain, isi data, bayar, dan bagikan link undangan Anda. Tampilan modern, cepat, dan ramah mobile.
                     </p>
                     <div class="d-flex flex-wrap gap-2">
-                        <a class="btn btn-lg btn-gradient rounded-pill px-4" href="{{ route('register') }}">Buat Undangan Sekarang</a>
-                        <a class="btn btn-lg btn-outline-secondary rounded-pill px-4" href="#katalog">Lihat Katalog</a>
+                        @auth
+                            <a class="btn btn-lg btn-gradient rounded-pill px-4" href="{{ route('user.catalog') }}">Pilih Template</a>
+                            <a class="btn btn-lg btn-outline-secondary rounded-pill px-4" href="{{ route('user.orders.index') }}">Pesanan Saya</a>
+                        @else
+                            <a class="btn btn-lg btn-gradient rounded-pill px-4" href="{{ route('register') }}">Buat Undangan Sekarang</a>
+                            <a class="btn btn-lg btn-outline-secondary rounded-pill px-4" href="#katalog">Lihat Katalog</a>
+                        @endauth
                     </div>
                     <div class="d-flex align-items-center gap-3 mt-4 small text-muted">
                         <div><i class="bi bi-check-circle-fill text-success me-1"></i> Tanpa coding</div>
@@ -97,7 +102,7 @@
                     <h2 class="h3 fw-bold mb-1">Preview contoh undangan</h2>
                     <p class="text-muted mb-0">Kurasi template siap pakai dengan nuansa wedding modern.</p>
                 </div>
-                <a class="btn btn-outline-primary rounded-pill" href="{{ route('user.catalog') }}">Buka katalog lengkap</a>
+                <a class="btn btn-outline-primary rounded-pill" href="{{ auth()->check() ? route('user.catalog') : route('register') }}">Buka katalog lengkap</a>
             </div>
             <div class="row g-3">
                 @forelse ($catalogPreview as $i => $product)
@@ -220,7 +225,7 @@
                                 <div class="text-muted small text-uppercase">{{ $plan['name'] }}</div>
                                 <div class="display-6 fw-bold my-2">{{ $plan['price'] }}</div>
                                 <p class="text-muted small">{{ $plan['feat'] }}</p>
-                                <a class="btn w-100 rounded-pill {{ $plan['btn'] }}" href="{{ route('register') }}">Pilih paket</a>
+                                <a class="btn w-100 rounded-pill {{ $plan['btn'] }}" href="{{ auth()->check() ? route('user.catalog') : route('register') }}">Pilih paket</a>
                             </div>
                         </div>
                     </div>

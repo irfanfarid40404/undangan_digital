@@ -15,7 +15,8 @@
                         <div class="mb-3">
                             <label class="form-label">Email</label>
                             <input type="email" name="email" value="{{ old('email') }}" class="form-control form-control-lg rounded-3" required placeholder="nama@email.com" autocomplete="username">
-                            <div class="invalid-feedback">Email tidak valid.</div>
+                            <div class="invalid-feedback">Email tidak valid
+                                .</div>
                         </div>
                         <div class="mb-2">
                             <label class="form-label">Password</label>

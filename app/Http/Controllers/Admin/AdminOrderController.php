@@ -6,6 +6,7 @@ use App\Http\Controllers\Controller;
 use App\Models\Order;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Storage;
 use Illuminate\Validation\Rule;
 use Illuminate\View\View;
 
@@ -14,7 +15,7 @@ class AdminOrderController extends Controller
     public function index(): View
     {
         return view('admin.orders', [
-            'orders' => Order::query()->with(['user', 'product', 'invitationDetail'])->latest()->get(),
+            'orders' => Order::query()->with(['user', 'product', 'invitationDetail', 'payments' => fn ($q) => $q->latest()])->latest()->get(),
         ]);
     }
 

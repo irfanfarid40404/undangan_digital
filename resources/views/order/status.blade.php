@@ -1,10 +1,14 @@
-@extends('layouts.user')
+@extends('layouts.landing')
 
-@section('title', 'Status pesanan')
-@section('page_heading', 'Status pesanan')
+@section('title', 'Status Pesanan')
+
+@push('styles')
+    <style>
+        .status-page { padding-top: 6rem; min-height: calc(100vh - 4rem); }
+    </style>
+@endpush
 
 @php
-    $sidebarActive = 'orders';
     $statusFlow = [
         \App\Models\Order::STATUS_PENDING_PAYMENT => 'Menunggu pembayaran',
         \App\Models\Order::STATUS_PAID => 'Lunas',
@@ -13,14 +17,21 @@
         \App\Models\Order::STATUS_CANCELLED => 'Dibatalkan',
     ];
     $currentIndex = array_search($order->status, array_keys($statusFlow), true);
-    $breadcrumb = [
-        ['label' => 'Home', 'url' => route('home')],
-        ['label' => 'Pesanan', 'url' => route('user.orders.index')],
-        ['label' => $order->publicNumber()],
-    ];
 @endphp
 
 @section('content')
+    <div class="status-page py-4">
+    <div class="container">
+        <div class="mb-4">
+            <h1 class="h4 fw-bold mb-0">Status pesanan</h1>
+            <nav aria-label="breadcrumb" class="mt-1">
+                <ol class="breadcrumb mb-0 small">
+                    <li class="breadcrumb-item"><a href="{{ route('home') }}">Home</a></li>
+                    <li class="breadcrumb-item"><a href="{{ route('user.orders.index') }}">Pesanan</a></li>
+                    <li class="breadcrumb-item active">#{{ $order->publicNumber() }}</li>
+                </ol>
+            </nav>
+        </div>
     <div class="row g-4">
         <div class="col-lg-7">
             <div class="card border-0 glass">
@@ -86,4 +97,6 @@
             <a class="btn btn-outline-primary w-100 rounded-pill" href="{{ route('user.catalog') }}">Pesan template lain</a>
         </div>
     </div>
+    </div>{{-- container --}}
+    </div>{{-- status-page --}}
 @endsection

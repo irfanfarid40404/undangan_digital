@@ -1,18 +1,26 @@
-@extends('layouts.user')
+@extends('layouts.landing')
 
 @section('title', 'Pembayaran')
-@section('page_heading', 'Metode pembayaran')
 
-@php
-    $sidebarActive = 'orders';
-    $breadcrumb = [
-        ['label' => 'Home', 'url' => route('home')],
-        ['label' => 'Checkout', 'url' => route('user.checkout')],
-        ['label' => 'Bayar'],
-    ];
-@endphp
+@push('styles')
+    <style>
+        .payment-page { padding-top: 6rem; min-height: calc(100vh - 4rem); }
+    </style>
+@endpush
 
 @section('content')
+    <div class="payment-page py-4">
+    <div class="container">
+        <div class="mb-4">
+            <h1 class="h4 fw-bold mb-0">Metode pembayaran</h1>
+            <nav aria-label="breadcrumb" class="mt-1">
+                <ol class="breadcrumb mb-0 small">
+                    <li class="breadcrumb-item"><a href="{{ route('home') }}">Home</a></li>
+                    <li class="breadcrumb-item"><a href="{{ route('user.checkout') }}">Checkout</a></li>
+                    <li class="breadcrumb-item active">Bayar</li>
+                </ol>
+            </nav>
+        </div>
     @if($paymentMethods->isEmpty())
         <div class="card border-0 glass">
             <div class="card-body p-4">
@@ -203,4 +211,6 @@
 
     <a class="btn btn-outline-secondary rounded-pill ms-2" href="{{ route('user.payment', ['fail' => 1]) }}">URL demo gagal (?fail=1)</a>
     @endif
+    </div>{{-- container --}}
+    </div>{{-- payment-page --}}
 @endsection

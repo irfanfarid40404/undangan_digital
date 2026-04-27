@@ -3,6 +3,7 @@
 namespace App\Providers;
 
 use App\Models\Notification;
+use App\Models\Order;
 use Illuminate\Pagination\Paginator;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\View;
@@ -15,6 +16,17 @@ class AppServiceProvider extends ServiceProvider
     public function boot(): void
     {
         Paginator::useBootstrapFive();
+
+        View::composer('partials.navbar-landing', function ($view): void {
+            $cartCount = 0;
+            $user = Auth::user();
+            if ($user) {
+                $cartCount = Order::where('user_id', $user->id)
+                    ->whereNotIn('status', [Order::STATUS_COMPLETED, Order::STATUS_CANCELLED])
+                    ->count();
+            }
+            $view->with('navCartCount', $cartCount);
+        });
 
         View::composer('layouts.user', function ($view): void {
             $notifications = [];

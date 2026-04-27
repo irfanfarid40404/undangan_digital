@@ -1,20 +1,31 @@
-@extends('layouts.user')
+@extends('layouts.landing')
 
-@section('title', 'Pilih desain')
-@section('page_heading', 'Kustomisasi template')
+@section('title', 'Pilih Desain')
+
+@push('styles')
+    <style>
+        .design-page { padding-top: 6rem; min-height: calc(100vh - 4rem); }
+    </style>
+@endpush
 
 @php
-    $sidebarActive = 'catalog';
     $previewCover = $product->resolvedImageUrl() ?: config('invitation_demo_media.preview_cover');
     $fallbackCover = config('invitation_demo_media.preview_cover');
-    $breadcrumb = [
-        ['label' => 'Home', 'url' => route('home')],
-        ['label' => 'Katalog', 'url' => route('user.catalog')],
-        ['label' => 'Desain'],
-    ];
 @endphp
 
 @section('content')
+    <div class="design-page py-6">
+    <div class="container">
+        <div class="mb-4">
+            <h1 class="h4 fw-bold mb-0">Kustomisasi template</h1>
+            <nav aria-label="breadcrumb" class="mt-1">
+                <ol class="breadcrumb mb-0 small">
+                    <li class="breadcrumb-item"><a href="{{ route('home') }}">Home</a></li>
+                    <li class="breadcrumb-item"><a href="{{ route('user.catalog') }}">Katalog</a></li>
+                    <li class="breadcrumb-item active">Desain</li>
+                </ol>
+            </nav>
+        </div>
     <div class="row g-4">
         <div class="col-lg-5">
             <div class="glass p-3 p-lg-4 h-100">
@@ -81,6 +92,8 @@
             </div>
         </div>
     </div>
+    </div>{{-- container --}}
+    </div>{{-- design-page --}}
 @endsection
 
 @push('scripts')

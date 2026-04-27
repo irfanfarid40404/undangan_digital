@@ -1,18 +1,26 @@
-@extends('layouts.user')
+@extends('layouts.landing')
 
-@section('title', 'Data pemesanan')
-@section('page_heading', 'Form data undangan')
+@section('title', 'Data Pemesanan')
 
-@php
-    $sidebarActive = 'orders';
-    $breadcrumb = [
-        ['label' => 'Home', 'url' => route('home')],
-        ['label' => 'Desain', 'url' => route('user.design', ['slug' => $product->slug])],
-        ['label' => 'Data'],
-    ];
-@endphp
+@push('styles')
+    <style>
+        .form-page { padding-top: 6rem; min-height: calc(100vh - 4rem); }
+    </style>
+@endpush
 
 @section('content')
+    <div class="form-page py-4">
+    <div class="container">
+        <div class="mb-4">
+            <h1 class="h4 fw-bold mb-0">Form data undangan</h1>
+            <nav aria-label="breadcrumb" class="mt-1">
+                <ol class="breadcrumb mb-0 small">
+                    <li class="breadcrumb-item"><a href="{{ route('home') }}">Home</a></li>
+                    <li class="breadcrumb-item"><a href="{{ route('user.design', ['slug' => $product->slug]) }}">Desain</a></li>
+                    <li class="breadcrumb-item active">Data</li>
+                </ol>
+            </nav>
+        </div>
     <div class="alert alert-light border glass-soft small mb-4">
         Template: <strong>{{ $product->name }}</strong> — Rp {{ number_format($product->price, 0, ',', '.') }}
     </div>
@@ -113,4 +121,6 @@
             <button type="button" class="btn btn-gradient rounded-pill px-4" id="orderNextBtn">Lanjut</button>
         </div>
     </form>
+    </div>{{-- container --}}
+    </div>{{-- form-page --}}
 @endsection
