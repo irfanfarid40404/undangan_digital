@@ -16,7 +16,9 @@
                 <li class="nav-item"><a class="nav-link" href="{{ route('home') }}#harga">Harga</a></li>
                 <li class="nav-item"><a class="nav-link" href="{{ route('home') }}#testimoni">Testimoni</a></li>
                 @auth
-                    <li class="nav-item"><a class="nav-link" href="{{ route('user.catalog') }}">App</a></li>
+                    @if (! auth()->user()->is_admin)
+                        <li class="nav-item"><a class="nav-link" href="{{ route('user.catalog') }}">App</a></li>
+                    @endif
                     @if (auth()->user()->is_admin)
                         <li class="nav-item"><a class="nav-link" href="{{ route('admin.dashboard') }}">Admin</a></li>
                     @endif

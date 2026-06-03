@@ -32,7 +32,7 @@
                             <tr data-row>
                                 <td style="width: 88px;">
                                     @if ($product->resolvedImageUrl())
-                                        <img src="{{ $product->resolvedImageUrl() }}" alt="{{ $product->name }}" class="rounded-3 object-fit-cover" style="width:72px;height:72px;">
+                                        <img src="{{ $product->resolvedImageUrl() }}" alt="{{ $product->name }}" class="rounded-3 object-fit-cover" style="width:72px;height:72px;" onerror="this.onerror=null;this.src='{{ config('invitation_demo_media.preview_cover') }}'; this.classList.add('bg-body-secondary');">
                                     @else
                                         <div class="rounded-3 bg-body-secondary d-flex align-items-center justify-content-center text-muted" style="width:72px;height:72px;">
                                             <i class="bi bi-image"></i>

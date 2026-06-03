@@ -34,7 +34,7 @@ Route::post('/logout', [AuthenticatedSessionController::class, 'destroy'])
 
 Route::get('/flow-failed', [InvitationWebController::class, 'flowFailed'])->name('flow.failed');
 
-Route::middleware('auth')->prefix('app')->name('user.')->group(function () {
+Route::middleware(['auth', 'not_admin'])->prefix('app')->name('user.')->group(function () {
     Route::get('/dashboard', UserDashboardController::class)->name('dashboard');
     Route::get('/catalog', CatalogController::class)->name('catalog');
     Route::get('/design/{slug?}', DesignController::class)->name('design');

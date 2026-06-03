@@ -74,7 +74,7 @@
                 <div class="row g-2">
                     @foreach ($galleryExamples as $src)
                         <div class="col-6 col-sm-3">
-                            <img src="{{ $src }}" alt="" class="img-fluid rounded-3 border object-fit-cover w-100" style="aspect-ratio: 1; max-height: 120px;" loading="lazy" decoding="async">
+                            <img src="{{ $src }}" alt="" class="img-fluid rounded-3 border object-fit-cover w-100" width="120" height="120" style="object-fit:cover; aspect-ratio: 1; max-height: 120px; height:120px;" loading="eager">
                         </div>
                     @endforeach
                 </div>

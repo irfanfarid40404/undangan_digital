@@ -15,16 +15,82 @@
             visibility: hidden;
         }
 
+        /* Hero layout: ensure comfortable vertical spacing on all screens */
         .home-hero {
-            padding-top: 5.25rem;
-            min-height: calc(100vh - 1rem) !important;
+            display: flex;
+            align-items: center;
+            padding-block: 2.25rem;
+            min-height: calc(100vh - 4rem) !important;
+        }
+
+        /* Container padding so content isn't flush to edges */
+        .home-hero .container {
+            padding-top: 1rem;
+            padding-bottom: 1rem;
+        }
+
+        /* Phone preview sizing: responsive max height so previews fit viewport */
+        .preview-phone {
+            aspect-ratio: 9 / 16;
+            max-height: min(420px, 45vh);
+            margin-inline: auto;
+        }
+
+        @media (min-width: 768px) {
+            .home-hero {
+                padding-block: 3rem;
+                min-height: calc(100vh - 3.5rem) !important;
+            }
+            .preview-phone {
+                max-height: min(520px, 55vh);
+            }
         }
 
         @media (min-width: 992px) {
             .home-hero {
                 padding-top: 0;
+                padding-bottom: 0;
                 min-height: 100vh !important;
             }
+            .home-hero .container {
+                padding-top: 3rem;
+                padding-bottom: 3rem;
+            }
+        }
+
+        /* Hide decorative blobs on small screens to avoid crowding */
+        @media (max-width: 575.98px) {
+            .hero-blob { display: none; }
+        }
+
+        /* Improve vertical rhythm between major sections on the homepage */
+        section.py-5 {
+            padding-top: 3rem;
+            padding-bottom: 3rem;
+        }
+
+        @media (min-width: 768px) {
+            section.py-5 {
+                padding-top: 4.5rem;
+                padding-bottom: 4.5rem;
+            }
+        }
+
+        @media (min-width: 1200px) {
+            section.py-5 {
+                padding-top: 6rem;
+                padding-bottom: 6rem;
+            }
+        }
+
+        /* Extra spacing between consecutive sections to avoid elements touching */
+        section + section {
+            margin-top: 1.5rem;
+        }
+
+        /* Slightly more space under section headings for clarity */
+        .section-fade h2 {
+            margin-bottom: 1rem;
         }
     </style>
 @endpush
