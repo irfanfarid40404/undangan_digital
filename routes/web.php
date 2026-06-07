@@ -20,6 +20,7 @@ use App\Http\Controllers\InvitationWebController;
 use Illuminate\Support\Facades\Route;
 
 Route::get('/', [InvitationWebController::class, 'home'])->name('home');
+Route::get('/i/{slug}', [\App\Http\Controllers\InvitationController::class, 'show'])->name('invitation.show');
 
 Route::middleware('guest')->group(function () {
     Route::get('/login', [AuthenticatedSessionController::class, 'create'])->name('login');
@@ -68,6 +69,8 @@ Route::middleware(['auth', 'admin'])->prefix('admin')->name('admin.')->group(fun
     Route::delete('/products/{product}', [AdminProductController::class, 'destroy'])->name('products.destroy');
 
     Route::get('/orders', [AdminOrderController::class, 'index'])->name('orders');
+    Route::post('/orders/{order}/final-file', [AdminOrderController::class, 'uploadFinalDesign'])->name('orders.final_file');
+    Route::post('/orders/{order}/publish', [AdminOrderController::class, 'publishInvitation'])->name('orders.publish');
     Route::post('/orders/{order}/status', [AdminOrderController::class, 'updateStatus'])->name('orders.status');
 
     Route::get('/payments', [AdminPaymentController::class, 'index'])->name('payments');

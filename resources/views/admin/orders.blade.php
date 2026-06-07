@@ -50,7 +50,18 @@
                                         <button type="submit" class="btn btn-sm btn-outline-primary rounded-pill">Simpan</button>
                                     </form>
                                 </td>
-                                <td class="text-end text-muted small">#{{ $order->id }}</td>
+                                <td class="text-end">
+                                    <!-- <form method="post" action="{{ route('admin.orders.final_file', $order) }}" enctype="multipart/form-data" class="d-inline-block me-2">
+                                        @csrf
+                                        <label class="btn btn-sm btn-outline-success rounded-pill mb-0" for="final-file-{{ $order->id }}">Unggah final</label>
+                                        <input type="file" id="final-file-{{ $order->id }}" name="final_file" accept=".pdf,.zip,.jpg,.jpeg,.png,.html,.htm" class="d-none" onchange="this.form.submit()">
+                                    </form> -->
+                                    <form method="post" action="{{ route('admin.orders.publish', $order) }}" class="d-inline-block me-2">
+                                        @csrf
+                                        <button type="submit" class="btn btn-sm btn-outline-primary rounded-pill">Publikasikan</button>
+                                    </form>
+                                    <div class="text-muted small">#{{ $order->id }}</div>
+                                </td>
                             </tr>
                         @empty
                             <tr><td colspan="7" class="text-center text-muted py-4">Belum ada pesanan.</td></tr>

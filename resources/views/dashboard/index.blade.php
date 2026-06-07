@@ -62,6 +62,16 @@
                             </div>
                         </div>
                     </div>
+                    @if(!empty($completedWithFiles) && $completedWithFiles->isNotEmpty())
+                        <div class="mt-3">
+                            <div class="fw-semibold mb-2">Undangan telah dipublikasikan</div>
+                            <div class="list-group list-group-flush">
+                                @foreach($completedWithFiles as $order)
+                                    <a class="list-group-item list-group-item-action" href="{{ route('invitation.show', ['slug' => $order->public_slug]) }}" target="_blank" rel="noopener">Buka undangan untuk #{{ $order->publicNumber() }}</a>
+                                @endforeach
+                            </div>
+                        </div>
+                    @endif
                 </div>
             </div>
         </div>

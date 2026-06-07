@@ -50,6 +50,19 @@ class NotificationService
         ]);
     }
 
+    public static function notifyDesignReady(int $userId, string $invitationUrl, string $note = null): void
+    {
+        Notification::create([
+            'user_id' => $userId,
+            'type' => 'design_ready',
+            'data' => [
+                'message' => $note ?? 'Undangan final Anda sudah dipublikasikan. Klik untuk melihat undangan.',
+                'invitation_url' => $invitationUrl,
+                'level' => 'success',
+            ],
+        ]);
+    }
+
     public static function clearOldNotifications(int $days = 30): void
     {
         Notification::where('created_at', '<', now()->subDays($days))->delete();

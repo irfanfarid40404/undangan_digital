@@ -12,6 +12,7 @@ class InvitationDetail extends Model
 
     protected $fillable = [
         'order_id',
+        'final_file_path',
         'phone_number',
         'partner_one_name',
         'partner_two_name',

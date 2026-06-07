@@ -25,10 +25,18 @@ class UserDashboardController extends Controller
             ->where('status', Order::STATUS_COMPLETED)
             ->count();
 
+        $completedWithFiles = Order::query()
+            ->where('user_id', $user->id)
+            ->where('status', Order::STATUS_COMPLETED)
+            ->whereNotNull('public_slug')
+            ->with('invitationDetail')
+            ->get();
+
         return view('dashboard.index', [
             'activeOrders' => $activeOrders,
             'awaitingPayment' => $awaitingPayment,
             'completed' => $completed,
+            'completedWithFiles' => $completedWithFiles,
         ]);
     }
 }
